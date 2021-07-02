@@ -14,20 +14,57 @@ library(mosaicData)
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r}
 
+data(Whickham)
+?Whickham
+```
 ### Exercise 2
+```{r}
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+  
+Whickham%>%
+  ggplot(aes(x=outcome, fill=smoker)) +
+  geom_bar( position="dodge")
 
+Whickham%>%
+  ggplot(aes(x=smoker, y=prob, fill=outcome)) +
+  geom_bar(stat="identity", position="dodge")
+
+
+## This graph does not give any explanations on possibilities. 
+## it only depicts the numbers. 
+## So I tried ratio-manner approaches. 
+
+ Whickham %>%
+  count(smoker, outcome) %>%
+  group_by(outcome) %>%
+  dplyr::mutate(prob = n/sum(n))%>%
+  ggplot(aes(x=outcome, y=prob, fill=smoker)) +
+  geom_bar(stat="identity")
+
+
+```
 ### Exercise 3
+```{r}
 
-...
+Whickham <-Whickham %>%
+  mutate(age_cat=case_when(
+    age <= 44 ~ "18-44",
+    age > 44 & age <= 64 ~ "45-64",
+    age > 64 ~ "65+",
+    TRUE ~ NA_character_))
 
-Add exercise headings as needed.
+Whickham %>%
+  count(smoker, age_cat, outcome)%>%
+  group_by(outcome) %>%
+  dplyr::mutate(prob = n/sum(n))%>%
+  ggplot(aes(x=outcome, y=prob, fill=smoker)) +
+  facet_grid(~age_cat)+
+  geom_bar(stat="identity")
+
+
+  
+  
+
+```
